@@ -1,8 +1,20 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { Book, BookOpen, Bookmark, Calendar, Heart, MessageCircle, Search, Users } from 'lucide-react-native';
+import {Snackbar} from 'react-native-paper'
+
 
 export default function BibleDashboard() {
+  const [visible, setVisible] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState('');
+
+  const onToggleSnackBar = (message: React.SetStateAction<string>) => {
+    setSnackbarMessage(message);
+    setVisible(!visible);
+  }
+
+  const onDismissSnackBar = () => setVisible(false);
+
   const navigationItems = [
     {
       title: 'Daily Reading',
@@ -67,7 +79,7 @@ export default function BibleDashboard() {
             <TouchableOpacity
               key={index}
               style={[styles.card, { backgroundColor: item.bgColor }]}
-              onPress={() => console.log(`Navigating to ${item.title}`)}
+              onPress={() => onToggleSnackBar(`${item.title} coming soon, May the Grace follow you.`)}
             >
               <View style={styles.iconContainer}>
                 {item.icon}
@@ -78,6 +90,13 @@ export default function BibleDashboard() {
           ))}
         </View>
       </ScrollView>
+      <Snackbar
+        visible={visible}
+        onDismiss={onDismissSnackBar}
+        duration={Snackbar.DURATION_SHORT}
+      >
+        {snackbarMessage}
+      </Snackbar>
     </View>
   );
 }
