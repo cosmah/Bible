@@ -19,7 +19,7 @@ const booksContent: BooksContent = {
 
 export default function Book() {
   const { book } = useLocalSearchParams();
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -78,14 +78,14 @@ export default function Book() {
     <View style={styles.container}>
       <Text style={styles.header}>{formatBookName(book)}</Text>
       <ScrollView style={styles.scrollView}>
-        {Object.entries(content).map(([chapter, verses]) => (
-          <View key={chapter} style={styles.chapter}>
-            <Text style={styles.chapterHeader}>Chapter {chapter}</Text>
+        {content.chapters.map((chapter: any, chapterIndex: number) => (
+          <View key={chapterIndex} style={styles.chapter}>
+            <Text style={styles.chapterHeader}>Chapter {chapter.chapter}</Text>
             <View style={styles.versesContainer}>
-              {Object.entries(verses as { [key: string]: string }).map(([verse, text]) => (
-                <View key={verse} style={styles.verse}>
-                  <Text style={styles.verseNumber}>{verse}</Text>
-                  <Text style={styles.verseText}>{text}</Text>
+              {chapter.verses.map((verse: any, verseIndex: number) => (
+                <View key={verseIndex} style={styles.verse}>
+                  <Text style={styles.verseNumber}>{verse.verse}</Text>
+                  <Text style={styles.verseText}>{verse.text}</Text>
                 </View>
               ))}
             </View>
@@ -95,7 +95,6 @@ export default function Book() {
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
