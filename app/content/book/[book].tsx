@@ -4,6 +4,44 @@ import { useLocalSearchParams } from 'expo-router';
 
 // Import all book content directly
 import genesis from '../../../data/genesis.json';
+import exodus from '../../../data/Exodus.json';
+import leviticus from '../../../data/Leviticus.json';
+import numbers from '../../../data/Numbers.json';
+import deuteronomy from '../../../data/Deuteronomy.json';
+import joshua from '../../../data/Joshua.json';
+import judges from '../../../data/Judges.json';
+import ruth from '../../../data/Ruth.json';
+import samuel1 from '../../../data/1Samuel.json';
+import samuel2 from '../../../data/2Samuel.json';
+import kings1 from '../../../data/1Kings.json';
+import kings2 from '../../../data/2Kings.json';
+import chronicles1 from '../../../data/1Chronicles.json';
+import chronicles2 from '../../../data/2Chronicles.json';
+import ezra from '../../../data/Ezra.json';
+import nehemiah from '../../../data/Nehemiah.json';
+import esther from '../../../data/Esther.json';
+import job from '../../../data/Job.json';
+import psalms from '../../../data/Psalms.json';
+import proverbs from '../../../data/Proverbs.json';
+import ecclesiastes from '../../../data/Ecclesiastes.json';
+import songofsolomon from '../../../data/SongofSolomon.json';
+import isaiah from '../../../data/Isaiah.json';
+import jeremiah from '../../../data/Jeremiah.json'; 
+import lamentations from '../../../data/Lamentations.json';
+import ezekiel from '../../../data/Ezekiel.json';
+import daniel from '../../../data/Daniel.json';
+import hosea from '../../../data/Hosea.json';
+import joel from '../../../data/Joel.json';
+import amos from '../../../data/Amos.json';
+import obadiah from '../../../data/Obadiah.json';
+import jonah from '../../../data/Jonah.json';
+import micah from '../../../data/Micah.json';
+import nahum from '../../../data/Nahum.json';
+import habakkuk from '../../../data/Habakkuk.json';
+import zephaniah from '../../../data/Zephaniah.json';
+import haggai from '../../../data/Haggai.json';
+import zechariah from '../../../data/Zechariah.json';
+import malachi from '../../../data/Malachi.json';
 // Import other books as needed...
 
 // Define a type for books content
@@ -14,6 +52,45 @@ type BooksContent = {
 // Create a books content map
 const booksContent: BooksContent = {
   genesis,
+  exodus,
+  leviticus,
+  numbers,
+  deuteronomy,
+  joshua,
+  judges,
+  ruth,
+  samuel1,
+  samuel2,
+  kings1,
+  kings2,
+  chronicles1,
+  chronicles2,
+  ezra,
+  nehemiah,
+  esther,
+  job,
+  psalms,
+  proverbs,
+  ecclesiastes,
+  songofsolomon,
+  isaiah,
+  jeremiah,
+  lamentations,
+  ezekiel,
+  daniel,
+  hosea,
+  joel,
+  amos,
+  obadiah,
+  jonah,
+  micah,
+  nahum,
+  habakkuk,
+  zephaniah,
+  haggai,
+  zechariah,
+  malachi,
+
   // Add other books here...
 };
 
