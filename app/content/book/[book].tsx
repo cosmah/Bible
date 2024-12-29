@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 
 // Import all book content directly
@@ -69,8 +69,6 @@ import john2 from '../../../data/2John.json';
 import john3 from '../../../data/3John.json';
 import jude from '../../../data/Jude.json';
 import revelation from '../../../data/Revelation.json';
-
-// Import other books as needed...
 
 // Define a type for books content
 type BooksContent = {
@@ -145,8 +143,6 @@ const booksContent: BooksContent = {
   john3,
   jude,
   revelation,
-
-  // Add other books here...
 };
 
 // Create a mapping object for numbered books
@@ -188,9 +184,8 @@ export default function Book() {
         Array.isArray(book) ? book[0].toLowerCase() : book.toLowerCase()
       );
 
-       // Use the mapping object to get the correct book name
-       bookName = bookNameMapping[bookName] || bookName;
-
+      // Use the mapping object to get the correct book name
+      bookName = bookNameMapping[bookName] || bookName;
 
       // Get content from our books map
       const bookContent = booksContent[bookName];
@@ -232,24 +227,34 @@ export default function Book() {
     return bookName.charAt(0).toUpperCase() + bookName.slice(1).toLowerCase();
   };
 
+  const renderVerse = ({ item }: { item: any }) => (
+    <View style={styles.verse}>
+      <Text style={styles.verseNumber}>{item.verse}</Text>
+      <Text style={styles.verseText}>{item.text}</Text>
+    </View>
+  );
+
+  const renderChapter = ({ item }: { item: any }) => (
+    <View style={styles.chapter}>
+      <Text style={styles.chapterHeader}>Chapter {item.chapter}</Text>
+      <FlatList
+        data={item.verses}
+        renderItem={renderVerse}
+        keyExtractor={(verse: any) => verse.verse.toString()}
+        contentContainerStyle={styles.versesContainer}
+      />
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>{formatBookName(book)}</Text>
-      <ScrollView style={styles.scrollView}>
-        {content.chapters.map((chapter: any, chapterIndex: number) => (
-          <View key={chapterIndex} style={styles.chapter}>
-            <Text style={styles.chapterHeader}>Chapter {chapter.chapter}</Text>
-            <View style={styles.versesContainer}>
-              {chapter.verses.map((verse: any, verseIndex: number) => (
-                <View key={verseIndex} style={styles.verse}>
-                  <Text style={styles.verseNumber}>{verse.verse}</Text>
-                  <Text style={styles.verseText}>{verse.text}</Text>
-                </View>
-              ))}
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+      <FlatList
+        data={content.chapters}
+        renderItem={renderChapter}
+        keyExtractor={(chapter: any) => chapter.chapter.toString()}
+        contentContainerStyle={styles.scrollView}
+      />
     </View>
   );
 }
@@ -267,7 +272,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   scrollView: {
-    flex: 1,
+    flexGrow: 1,
   },
   chapter: {
     marginBottom: 24,
