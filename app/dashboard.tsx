@@ -21,7 +21,7 @@ export default function BibleDashboard() {
       subtitle: 'Follow your daily scripture right from where you left it',
       icon: <Calendar size={32} color="#D97706" />,
       bgColor: '#FEF3C7',
-      onPress: () => { router.push('/content/books') }
+      onPress: () => { router.push('/content/lang') }
     },
     {
       title: 'Bible Study',
