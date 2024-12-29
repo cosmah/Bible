@@ -1,16 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import books from '../../data/books.json';
 
 export default function Books() {
-  const handleBookPress = (book: string) => {
-    // Fix: Use the correct path format for Expo Router
-    router.push({
-      pathname: '/content/book/[book]',
-      params: { book: book.toLowerCase() }
-    });
+  const handleBookPress = async (book: string) => {
+    try {
+      await AsyncStorage.setItem('lastSelectedBook', book.toLowerCase());
+      router.push({
+        pathname: '/content/book/[book]',
+        params: { book: book.toLowerCase() }
+      });
+    } catch (error) {
+      console.error('Failed to save the book to storage', error);
+    }
   };
+
+  useEffect(() => {
+    const checkLastSelectedBook = async () => {
+      try {
+        const lastSelectedBook = await AsyncStorage.getItem('lastSelectedBook');
+        if (lastSelectedBook) {
+          router.push({
+            pathname: '/content/book/[book]',
+            params: { book: lastSelectedBook }
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load the last selected book from storage', error);
+      }
+    };
+
+    checkLastSelectedBook();
+  }, []);
 
   return (
     <View style={styles.container}>

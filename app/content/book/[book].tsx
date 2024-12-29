@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Import all book content directly
 import genesis from '../../../data/genesis.json';
@@ -171,39 +172,91 @@ export default function Book() {
   const { book } = useLocalSearchParams();
   const [content, setContent] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [lastRead, setLastRead] = useState<{ chapter: number; verse: number } | null>(null);
+  const [isInitialScroll, setIsInitialScroll] = useState(true);
+  const flatListRef = useRef<FlatList>(null);
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
-    try {
-      // Ensure book parameter exists
-      if (!book) {
-        setError('No book specified');
-        return;
+    const loadBookContent = async () => {
+      try {
+        if (!book) {
+          setError('No book specified');
+          return;
+        }
+
+        let bookName = decodeURIComponent(
+          Array.isArray(book) ? book[0].toLowerCase() : book.toLowerCase()
+        );
+        bookName = bookNameMapping[bookName] || bookName;
+        const bookContent = booksContent[bookName];
+
+        if (!bookContent) {
+          setError(`Book content not found for ${bookName}`);
+          return;
+        }
+
+        setContent(bookContent);
+
+        // Load last read position
+        const lastReadData = await AsyncStorage.getItem(`lastRead_${bookName}`);
+        if (lastReadData) {
+          const parsedData = JSON.parse(lastReadData);
+          setLastRead(parsedData);
+        }
+
+        await AsyncStorage.setItem('lastSelectedBook', bookName);
+      } catch (err) {
+        setError(err instanceof Error ? `Error loading book content: ${err.message}` : 'Error loading book content');
       }
+    };
 
-      let bookName = decodeURIComponent(
-        Array.isArray(book) ? book[0].toLowerCase() : book.toLowerCase()
-      );
-
-      // Use the mapping object to get the correct book name
-      bookName = bookNameMapping[bookName] || bookName;
-
-      // Get content from our books map
-      const bookContent = booksContent[bookName];
-
-      if (!bookContent) {
-        setError(`Book content not found for ${bookName}`);
-        return;
-      }
-
-      setContent(bookContent);
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(`Error loading book content: ${err.message}`);
-      } else {
-        setError('Error loading book content');
-      }
-    }
+    loadBookContent();
   }, [book]);
+
+  useEffect(() => {
+    if (lastRead && content && isInitialScroll) {
+      // Clear any existing timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      // Set a timeout to ensure the FlatList has properly rendered
+      timeoutRef.current = setTimeout(() => {
+        if (flatListRef.current) {
+          flatListRef.current.scrollToIndex({
+            index: lastRead.chapter - 1,
+            animated: true,
+            viewPosition: 0
+          });
+          
+          // After initial scroll, set isInitialScroll to false
+          setIsInitialScroll(false);
+        }
+      }, 500);
+    }
+
+    // Cleanup timeout on unmount
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [lastRead, content, isInitialScroll]);
+
+  const handleVersePress = async (chapterIndex: number, verseIndex: number) => {
+    if (!book) return;
+
+    let bookName = decodeURIComponent(
+      Array.isArray(book) ? book[0].toLowerCase() : book.toLowerCase()
+    );
+    bookName = bookNameMapping[bookName] || bookName;
+
+    const lastReadData = { chapter: chapterIndex + 1, verse: verseIndex + 1 };
+    await AsyncStorage.setItem(`lastRead_${bookName}`, JSON.stringify(lastReadData));
+    setLastRead(lastReadData);
+  };
+
 
   if (error) {
     return (
@@ -227,14 +280,16 @@ export default function Book() {
     return bookName.charAt(0).toUpperCase() + bookName.slice(1).toLowerCase();
   };
 
-  const renderVerse = ({ item }: { item: any }) => (
-    <View style={styles.verse}>
-      <Text style={styles.verseNumber}>{item.verse}</Text>
-      <Text style={styles.verseText}>{item.text}</Text>
-    </View>
+  const renderVerse = ({ item, index }: { item: any; index: number }) => (
+    <TouchableOpacity onPress={() => handleVersePress(item.chapter - 1, index)}>
+      <View style={styles.verse}>
+        <Text style={styles.verseNumber}>{item.verse}</Text>
+        <Text style={styles.verseText}>{item.text}</Text>
+      </View>
+    </TouchableOpacity>
   );
 
-  const renderChapter = ({ item }: { item: any }) => (
+  const renderChapter = ({ item, index }: { item: any; index: number }) => (
     <View style={styles.chapter}>
       <Text style={styles.chapterHeader}>Chapter {item.chapter}</Text>
       <FlatList
@@ -250,6 +305,7 @@ export default function Book() {
     <View style={styles.container}>
       <Text style={styles.header}>{formatBookName(book)}</Text>
       <FlatList
+        ref={flatListRef}
         data={content.chapters}
         renderItem={renderChapter}
         keyExtractor={(chapter: any) => chapter.chapter.toString()}
