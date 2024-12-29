@@ -42,6 +42,34 @@ import zephaniah from '../../../data/Zephaniah.json';
 import haggai from '../../../data/Haggai.json';
 import zechariah from '../../../data/Zechariah.json';
 import malachi from '../../../data/Malachi.json';
+import matthew from '../../../data/Matthew.json';
+import mark from '../../../data/Mark.json';
+import luke from '../../../data/Luke.json';
+import john from '../../../data/John.json';
+import acts from '../../../data/Acts.json';
+import romans from '../../../data/Romans.json';
+import corinthians1 from '../../../data/1Corinthians.json';
+import corinthians2 from '../../../data/2Corinthians.json';
+import galatians from '../../../data/Galatians.json';
+import ephesians from '../../../data/Ephesians.json';
+import philippians from '../../../data/Philippians.json';
+import colossians from '../../../data/Colossians.json';
+import thessalonians1 from '../../../data/1Thessalonians.json';
+import thessalonians2 from '../../../data/2Thessalonians.json';
+import timothy1 from '../../../data/1Timothy.json';
+import timothy2 from '../../../data/2Timothy.json';
+import titus from '../../../data/Titus.json';
+import philemon from '../../../data/Philemon.json';
+import hebrews from '../../../data/Hebrews.json';
+import james from '../../../data/James.json';
+import peter1 from '../../../data/1Peter.json';
+import peter2 from '../../../data/2Peter.json';
+import john1 from '../../../data/1John.json';
+import john2 from '../../../data/2John.json';
+import john3 from '../../../data/3John.json';
+import jude from '../../../data/Jude.json';
+import revelation from '../../../data/Revelation.json';
+
 // Import other books as needed...
 
 // Define a type for books content
@@ -90,6 +118,33 @@ const booksContent: BooksContent = {
   haggai,
   zechariah,
   malachi,
+  matthew,
+  mark,
+  luke,
+  john,
+  acts,
+  romans,
+  corinthians1,
+  corinthians2,
+  galatians,
+  ephesians,
+  philippians,
+  colossians,
+  thessalonians1,
+  thessalonians2,
+  timothy1,
+  timothy2,
+  titus,
+  philemon,
+  hebrews,
+  james,
+  peter1,
+  peter2,
+  john1,
+  john2,
+  john3,
+  jude,
+  revelation,
 
   // Add other books here...
 };
