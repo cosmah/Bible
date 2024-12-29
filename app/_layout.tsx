@@ -7,6 +7,8 @@ export default function RootLayout() {
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="dashboard" options={{ headerShown: false }} />
+      <Stack.Screen name="content/books" options={{ headerShown: false }} />
+      <Stack.Screen name="content/book/[book]" options={{ headerShown: false }} />
       {/* Add more screens as needed */}
     </Stack>
   );

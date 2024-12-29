@@ -50,6 +50,12 @@
       "eas": {
         "projectId": "f55e5120-db00-470d-88f1-b637f38c4bb8"
       }
-    }
+    },
+    "routes": [
+      {
+        "path": "/content/book/:book",
+        "component": "./content/book.tsx"
+      }
+    ]
   }
 }

@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { Book, BookOpen, Bookmark, Calendar, Heart, MessageCircle, Search, Users } from 'lucide-react-native';
-import {Snackbar} from 'react-native-paper'
-
+import { Snackbar } from 'react-native-paper';
+import { router } from 'expo-router';
 
 export default function BibleDashboard() {
   const [visible, setVisible] = React.useState(false);
@@ -11,58 +11,66 @@ export default function BibleDashboard() {
   const onToggleSnackBar = (message: React.SetStateAction<string>) => {
     setSnackbarMessage(message);
     setVisible(!visible);
-  }
+  };
 
   const onDismissSnackBar = () => setVisible(false);
 
   const navigationItems = [
     {
       title: 'Daily Reading',
-      subtitle: 'Follow your daily scripture plan',
+      subtitle: 'Follow your daily scripture right from where you left it',
       icon: <Calendar size={32} color="#D97706" />,
       bgColor: '#FEF3C7',
+      onPress: () => { router.push('/content/books') }
     },
     {
       title: 'Bible Study',
       subtitle: 'Read and study the scripture',
       icon: <BookOpen size={32} color="#2563EB" />,
       bgColor: '#DBEAFE',
+      onPress: () => onToggleSnackBar('Bible Study coming soon, May the Grace follow you.')
     },
     {
       title: 'Bookmarks',
       subtitle: 'Your saved verses and chapters',
       icon: <Bookmark size={32} color="#059669" />,
       bgColor: '#D1FAE5',
+      onPress: () => onToggleSnackBar('Bookmarks coming soon, May the Grace follow you.')
     },
     {
       title: 'Community',
       subtitle: 'Connect with other believers',
       icon: <Users size={32} color="#DC2626" />,
       bgColor: '#FECACA',
+      onPress: () => onToggleSnackBar('Community coming soon, May the Grace follow you.')
     },
     {
       title: 'Devotionals',
       subtitle: 'Daily inspiration and guidance',
       icon: <Heart size={32} color="#DB2777" />,
       bgColor: '#FCE7F3',
+      onPress: () => onToggleSnackBar('Devotionals coming soon, May the Grace follow you.')
     },
     {
       title: 'Search',
       subtitle: 'Find verses and passages',
       icon: <Search size={32} color="#4F46E5" />,
       bgColor: '#E0E7FF',
+      onPress: () => onToggleSnackBar('Search coming soon, May the Grace follow you.')
     },
     {
       title: 'Study Plans',
       subtitle: 'Structured biblical learning',
       icon: <Book size={32} color="#0D9488" />,
       bgColor: '#CCFBF1',
+      onPress: () => onToggleSnackBar('Study Plans coming soon, May the Grace follow you.')
     },
     {
       title: 'Discussion',
       subtitle: 'Share thoughts and insights',
       icon: <MessageCircle size={32} color="#EA580C" />,
       bgColor: '#FFEDD5',
+      onPress: () => onToggleSnackBar('Discussion coming soon, May the Grace follow you.')
     }
   ];
 
@@ -79,7 +87,7 @@ export default function BibleDashboard() {
             <TouchableOpacity
               key={index}
               style={[styles.card, { backgroundColor: item.bgColor }]}
-              onPress={() => onToggleSnackBar(`${item.title} coming soon, May the Grace follow you.`)}
+              onPress={item.onPress}
             >
               <View style={styles.iconContainer}>
                 {item.icon}
