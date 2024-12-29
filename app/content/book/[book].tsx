@@ -149,6 +149,28 @@ const booksContent: BooksContent = {
   // Add other books here...
 };
 
+// Create a mapping object for numbered books
+const bookNameMapping: { [key: string]: string } = {
+  '1 samuel': 'samuel1',
+  '2 samuel': 'samuel2',
+  '1 kings': 'kings1',
+  '2 kings': 'kings2',
+  '1 chronicles': 'chronicles1',
+  '2 chronicles': 'chronicles2',
+  '1 corinthians': 'corinthians1',
+  '2 corinthians': 'corinthians2',
+  '1 thessalonians': 'thessalonians1',
+  '2 thessalonians': 'thessalonians2',
+  '1 timothy': 'timothy1',
+  '2 timothy': 'timothy2',
+  '1 peter': 'peter1',
+  '2 peter': 'peter2',
+  '1 john': 'john1',
+  '2 john': 'john2',
+  '3 john': 'john3',
+  // Add other mappings as needed...
+};
+
 export default function Book() {
   const { book } = useLocalSearchParams();
   const [content, setContent] = useState<any>(null);
@@ -162,9 +184,13 @@ export default function Book() {
         return;
       }
 
-      const bookName = decodeURIComponent(
+      let bookName = decodeURIComponent(
         Array.isArray(book) ? book[0].toLowerCase() : book.toLowerCase()
       );
+
+       // Use the mapping object to get the correct book name
+       bookName = bookNameMapping[bookName] || bookName;
+
 
       // Get content from our books map
       const bookContent = booksContent[bookName];
