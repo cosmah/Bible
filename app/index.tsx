@@ -19,7 +19,7 @@ export default function Index() {
       
       <TouchableOpacity 
   style={styles.buttonContainer}
-  onPress={() => { router.push('/tabs') }}
+  onPress={() => { router.push('/dashboard') }}
 >
   <Text style={styles.buttonText}>Get Started</Text>
 </TouchableOpacity>
