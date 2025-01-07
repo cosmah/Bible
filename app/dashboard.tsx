@@ -35,7 +35,7 @@ export default function BibleDashboard() {
       subtitle: 'Your saved verses and chapters',
       icon: <Bookmark size={32} color="#059669" />,
       bgColor: '#D1FAE5',
-      onPress: () => onToggleSnackBar('Bookmarks coming soon, May the Grace follow you.')
+      onPress: () => router.push('/content/Bookmark')  // Updated this line
     },
     {
       title: 'Community',
