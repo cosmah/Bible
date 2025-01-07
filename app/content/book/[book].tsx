@@ -420,15 +420,15 @@ export default function Book() {
     return bookName.charAt(0).toUpperCase() + bookName.slice(1).toLowerCase();
   };
 
-  const renderVerse = ({ item, index, chapter }: { item: any; index: number; chapter: number }) => (
+  const renderVerse = ({ item, index }: { item: any; index: number }, chapterIndex: number) => (
     <TouchableOpacity
-      onPress={() => handleVersePress(chapter - 1, index)}
-      onLongPress={() => toggleVerseBookmark(chapter - 1, index)}
+      onPress={() => handleVersePress(chapterIndex, index)}
+      onLongPress={() => toggleVerseBookmark(chapterIndex, index)}
     >
       <View style={styles.verse}>
         <Text style={styles.verseNumber}>{item.verse}</Text>
         <Text style={styles.verseText}>{item.text}</Text>
-        {isVerseBookmarked(chapter - 1, index) && (
+        {isVerseBookmarked(chapterIndex, index) && (
           <Bookmark size={16} color="#4B5563" style={styles.bookmarkIcon} />
         )}
       </View>
@@ -446,7 +446,7 @@ export default function Book() {
       </TouchableOpacity>
       <FlatList
         data={item.verses}
-        renderItem={({ item, index }) => renderVerse({ item, index, chapter: item.chapter })}
+        renderItem={({ item, index }) => renderVerse({ item, index }, index)}
         keyExtractor={(verse: any) => verse.verse.toString()}
         contentContainerStyle={styles.versesContainer}
       />
@@ -487,6 +487,7 @@ const styles = StyleSheet.create({
   },
   bookmarkIcon: {
     marginLeft: 8,
+    backgroundColor: "#ed670e",
   },
   scrollView: {
     flexGrow: 1,
