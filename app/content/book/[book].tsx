@@ -242,7 +242,7 @@ export default function Book() {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-  
+
       // Add validation to ensure chapter index is valid
       const chapterIndex = lastRead.chapter - 1;
       if (chapterIndex >= 0 && chapterIndex < content.chapters.length) {
@@ -252,16 +252,16 @@ export default function Book() {
             flatListRef.current.scrollToIndex({
               index: chapterIndex,
               animated: true,
-              viewPosition: 0
+              viewPosition: 0,
             });
-            
+
             // After initial scroll, set isInitialScroll to false
             setIsInitialScroll(false);
           }
         }, 500);
       }
     }
-  
+
     // Cleanup timeout on unmount
     return () => {
       if (timeoutRef.current) {
@@ -314,34 +314,36 @@ export default function Book() {
   };
 
   // Add this near your other const declarations
-const getItemLayout = (data: any, index: number) => ({
-  length: 200, // Estimated height of each chapter item
-  offset: 200 * index,
-  index,
-});
+  const getItemLayout = (data: any, index: number) => ({
+    length: 200, // Estimated height of each chapter item
+    offset: 200 * index,
+    index,
+  });
 
-// Add this handler for scroll failures
-const onScrollToIndexFailed = (info: {
-  index: number;
-  highestMeasuredFrameIndex: number;
-  averageItemLength: number;
-}) => {
-  if (flatListRef.current) {
-    setTimeout(() => {
-      flatListRef.current?.scrollToIndex({
-        index: info.index,
-        animated: true,
-        viewPosition: 0,
-      });
-    }, 100);
-  }
-};
+  // Add this handler for scroll failures
+  const onScrollToIndexFailed = (info: {
+    index: number;
+    highestMeasuredFrameIndex: number;
+    averageItemLength: number;
+  }) => {
+    if (flatListRef.current) {
+      setTimeout(() => {
+        flatListRef.current?.scrollToIndex({
+          index: info.index,
+          animated: true,
+          viewPosition: 0,
+        });
+      }, 100);
+    }
+  };
 
   const toggleVerseBookmark = async (
     chapterIndex: number,
     verseIndex: number
   ) => {
-    console.log(`Long-pressed verse: Chapter ${chapterIndex + 1}, Verse ${verseIndex + 1}`);
+    console.log(
+      `Long-pressed verse: Chapter ${chapterIndex + 1}, Verse ${verseIndex + 1}`
+    );
     if (!book) return;
     const bookName = Array.isArray(book)
       ? book[0].toLowerCase()
@@ -450,50 +452,52 @@ const onScrollToIndexFailed = (info: {
       onLongPress={() => toggleVerseBookmark(chapterIndex, index)}
     >
       <View style={styles.verse}>
-        <Text style={styles.verseNumber}>{item.verse}</Text>
-        <Text style={styles.verseText}>{item.text}</Text>
+        <Text style={styles.verseNumber}>{`${item.verse}`}</Text>
+        <Text style={styles.verseText}>{`${item.text}`}</Text>
         {isVerseBookmarked(chapterIndex, index) && (
-          <Bookmark size={16} color="#4B5563" style={styles.bookmarkIcon} />
+          <View style={styles.bookmarkContainer}>
+            <Bookmark size={16} color="#4B5563" />
+          </View>
         )}
       </View>
     </TouchableOpacity>
   );
 
   const renderChapter = ({ item, index }: { item: any; index: number }) => (
-    <View style={styles.chapter}>
-      <TouchableOpacity
-        onPress={() => toggleChapterBookmark(index)}
-        style={styles.chapterHeaderContainer}
-      >
-        <Text style={styles.chapterHeader}>Chapter {item.chapter}</Text>
-        {isChapterBookmarked(index) && <Bookmark size={20} color="#4B5563" />}
-      </TouchableOpacity>
-      // In your verses FlatList inside renderChapter:
-<FlatList
-  data={item.verses}
-  renderItem={({ item, index }) => renderVerse({ item, index }, index)}
-  keyExtractor={(verse: any) => verse.verse.toString()}
-  contentContainerStyle={styles.versesContainer}
-  removeClippedSubviews={true}
-  maxToRenderPerBatch={10}
-  initialNumToRender={10}
-  windowSize={5}
-/>
-    </View>
-  );
+  <View style={styles.chapter}>
+    <TouchableOpacity
+      onPress={() => toggleChapterBookmark(index)}
+      style={styles.chapterHeaderContainer}
+    >
+      <Text style={styles.chapterHeader}>{`Chapter ${item.chapter}`}</Text>
+      {isChapterBookmarked(index) && (
+        <View style={styles.bookmarkContainer}>
+          <Bookmark size={20} color="#4B5563" />
+        </View>
+      )}
+    </TouchableOpacity>
+    <FlatList
+      data={item.verses}
+      renderItem={({ item: verseItem, index: verseIndex }) => 
+        renderVerse({ item: verseItem, index: verseIndex }, index)}
+      keyExtractor={(verse: any) => `${verse.verse}`}
+      contentContainerStyle={styles.versesContainer}
+    />
+  </View>
+);
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>{formatBookName(book)}</Text>
       <FlatList
-  ref={flatListRef}
-  data={content.chapters}
-  renderItem={renderChapter}
-  keyExtractor={(chapter: any) => chapter.chapter.toString()}
-  contentContainerStyle={styles.scrollView}
-  getItemLayout={getItemLayout}
-  onScrollToIndexFailed={onScrollToIndexFailed}
-/>
+        ref={flatListRef}
+        data={content.chapters}
+        renderItem={renderChapter}
+        keyExtractor={(chapter: any) => chapter.chapter.toString()}
+        contentContainerStyle={styles.scrollView}
+        getItemLayout={getItemLayout}
+        onScrollToIndexFailed={onScrollToIndexFailed}
+      />
     </View>
   );
 }
@@ -515,6 +519,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 12,
+  },
+  bookmarkContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
   },
   bookmarkIcon: {
     marginLeft: 8,
